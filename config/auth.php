@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+declare(strict_types=1);
 
 return [
 
@@ -64,7 +64,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'model' => env('AUTH_MODEL', \Lightit\Users\Domain\Models\User::class),
         ],
 
         // 'users' => [

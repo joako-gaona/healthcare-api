@@ -25,3 +25,13 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+yarn-error.log
+/_ide_helper.php
+/.phpstorm.meta.php
+/reports/
+/tsconfig.tsbuildinfo
+/.phpunit.cache/
+/storage/certs/
+
+# Sentry Config File
+.env.sentry-build-plugin
