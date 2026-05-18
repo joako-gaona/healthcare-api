@@ -9,7 +9,8 @@ readonly class CredentialsDto
     public function __construct(
         public string $email,
         public string $password,
-    ) {}
+    ) {
+    }
 
     /** @return array<string, string> */
     public function toArray(): array
