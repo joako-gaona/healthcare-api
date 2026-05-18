@@ -16,7 +16,9 @@
     "laravel/framework": "^13.0",
     "laravel/sanctum": "^4.0",
     "laravel/tinker": "^3.0",
+    "light-it-labs/lightit-auth-laravel": "^1.3",
     "opcodesio/log-viewer": "^3.21",
+    "php-open-source-saver/jwt-auth": "^2.0",
     "saloonphp/laravel-plugin": "^4.0",
     "saloonphp/saloon": "^4.0",
     "sentry/sentry-laravel": "^4.4",
@@ -120,5 +122,11 @@
     }
   },
   "minimum-stability": "stable",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Light-it-labs/lightit-auth-laravel.git"
+    }
+  ]
 }
