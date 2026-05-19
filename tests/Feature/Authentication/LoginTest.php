@@ -15,7 +15,7 @@ describe('authentication', function (): void {
     it('can log in and retrieve the authenticated user', function (): void {
         $user = UserFactory::new()->createOne();
 
-        $loginResponse = postJson(url('/api/login'), [
+        $loginResponse = postJson(url('/api/auth/login'), [
             'email' => $user->email,
             'password' => '>e$pV4chNFcJoAB%X#{',
         ]);
@@ -36,7 +36,7 @@ describe('authentication', function (): void {
         /** @var string $accessToken */
         $accessToken = $loginResponse->json('data.access_token');
 
-        getJson(url('/api/me'), [
+        getJson(url('/api/auth/me'), [
             'Authorization' => "Bearer {$accessToken}",
         ])
             ->assertOk()
@@ -47,7 +47,7 @@ describe('authentication', function (): void {
     it('rejects invalid credentials', function (): void {
         $user = UserFactory::new()->createOne();
 
-        postJson(url('/api/login'), [
+        postJson(url('/api/auth/login'), [
             'email' => $user->email,
             'password' => 'wrong-password',
         ])
