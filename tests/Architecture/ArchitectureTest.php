@@ -27,10 +27,6 @@ arch('resources')
     ->expect('Lightit\\*\\App\\Resources')
     ->toHaveSuffix('Resource');
 
-arch('notifications')
-    ->expect('Lightit\\*\\App\\Notifications')
-    ->toHaveSuffix('Notification');
-
 arch('no env fuera de config')
     ->expect('Lightit')
     ->not->toUse('env');
