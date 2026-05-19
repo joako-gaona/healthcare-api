@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lightit\Authentication\App\Controllers;
 
+use Carbon\Constants\UnitValue;
 use Dedoc\Scramble\Attributes\Endpoint;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +26,7 @@ final readonly class RefreshController
         $loginDto = new LoginDto(
             accessToken: $jwt->refresh(),
             tokenType: 'Bearer',
-            expiresIn: $jwtAuth->getTTL() * 60,
+            expiresIn: $jwtAuth->getTTL() * UnitValue::SECONDS_PER_MINUTE,
         );
 
         return LoginResource::make($loginDto)
