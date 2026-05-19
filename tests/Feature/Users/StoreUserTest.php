@@ -105,5 +105,4 @@ describe('users', function (): void {
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([$field], 'error.fields');
     })->with('validation-rules');
-
 });

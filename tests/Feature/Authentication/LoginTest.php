@@ -7,7 +7,6 @@ namespace Tests\Feature\Authentication;
 use Database\Factories\UserFactory;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Lightit\Authentication\App\Controllers\LoginController;
-use Lightit\Users\Domain\Models\User;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 
