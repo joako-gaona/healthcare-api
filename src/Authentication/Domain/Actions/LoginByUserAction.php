@@ -28,7 +28,7 @@ final class LoginByUserAction
 
         return new LoginDto(
             accessToken: $token,
-            tokenType: 'bearer',
+            tokenType: 'Bearer',
             expiresIn: $this->jwtAuth->getTTL() * 60,
         );
     }
