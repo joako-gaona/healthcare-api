@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\Route;
+use Lightit\Authentication\App\Controllers\LoginController;
+use Lightit\Authentication\App\Controllers\LogoutController;
+use Lightit\Authentication\App\Controllers\RefreshController;
 use Lightit\Users\App\Controllers\DeleteUserController;
 use Lightit\Users\App\Controllers\GetUserController;
 use Lightit\Users\App\Controllers\ListUserController;
@@ -21,12 +24,17 @@ use Lightit\Users\App\Controllers\UpdateUserController;
 |
 */
 
-Route::middleware('auth:sanctum')
-    ->get('/me', fn(
+Route::post('login', LoginController::class);
+Route::middleware('auth:api')->group(static function (): void {
+    Route::post('logout', LogoutController::class);
+    Route::post('refresh', RefreshController::class);
+
+    Route::get('/me', fn(
         #[CurrentUser] $user
     ) => response()->json([
         'data' => $user,
     ]));
+});
 
 /*
 |--------------------------------------------------------------------------
