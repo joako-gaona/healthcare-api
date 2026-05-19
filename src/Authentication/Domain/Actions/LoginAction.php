@@ -25,7 +25,7 @@ final class LoginAction
     public function execute(CredentialsDto $credentials): LoginDto
     {
         /** @var JWTGuard $guard */
-        $guard = $this->factory->guard();
+        $guard = $this->factory->guard('api');
 
         if (! $token = $guard->attempt($credentials->toArray())) {
             throw new UnauthenticatedException();

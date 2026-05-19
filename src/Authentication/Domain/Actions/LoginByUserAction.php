@@ -21,7 +21,7 @@ final class LoginByUserAction
     public function execute(User $user): LoginDto
     {
         /** @var JWTGuard $guard */
-        $guard = $this->factory->guard();
+        $guard = $this->factory->guard('api');
 
         /** @var string $token */
         $token = $guard->tokenById(id: $user->getKey());

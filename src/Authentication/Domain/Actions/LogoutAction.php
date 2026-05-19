@@ -17,7 +17,7 @@ class LogoutAction
     public function execute(): void
     {
         /** @var JWTGuard $guard */
-        $guard = $this->factory->guard();
+        $guard = $this->factory->guard('api');
         $guard->logout();
     }
 }
