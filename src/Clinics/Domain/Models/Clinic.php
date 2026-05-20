@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Lightit\Clinics\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Lightit\Doctors\Domain\Models\Doctor;
 
 /**
  * @property int                          $id
@@ -12,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                       $address
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Doctor> $doctors
+ * @property-read int|null $doctors_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Clinic newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Clinic newQuery()
@@ -28,4 +32,12 @@ class Clinic extends Model
 {
     #[\Override]
     protected $guarded = ['id'];
+
+    /**
+     * @return BelongsToMany<Doctor, $this>
+     */
+    public function doctors(): BelongsToMany
+    {
+        return $this->belongsToMany(Doctor::class, 'clinic_doctor');
+    }
 }
