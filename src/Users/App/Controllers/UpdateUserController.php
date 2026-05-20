@@ -9,7 +9,7 @@ use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 use Lightit\Users\App\Requests\UpsertUserRequest;
 use Lightit\Users\App\Resources\UserResource;
-use Lightit\Users\Domain\Actions\UpdateUserAction;
+use Lightit\Users\Domain\Actions\UpsertUserAction;
 use Lightit\Users\Domain\Models\User;
 
 #[Group('Users')]
@@ -20,9 +20,9 @@ final readonly class UpdateUserController
         title: 'Update a user',
         description: 'Updates an existing user.'
     )]
-    public function __invoke(User $user, UpsertUserRequest $request, UpdateUserAction $updateUserAction): JsonResponse
+    public function __invoke(User $user, UpsertUserRequest $request, UpsertUserAction $upsertUserAction): JsonResponse
     {
-        $user = $updateUserAction->execute($user, $request->toDto());
+        $user = $upsertUserAction->execute($request->toDto(), $user);
 
         return UserResource::make($user)
             ->response();

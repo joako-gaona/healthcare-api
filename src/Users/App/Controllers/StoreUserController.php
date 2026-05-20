@@ -9,7 +9,7 @@ use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 use Lightit\Users\App\Requests\UpsertUserRequest;
 use Lightit\Users\App\Resources\UserResource;
-use Lightit\Users\Domain\Actions\StoreUserAction;
+use Lightit\Users\Domain\Actions\UpsertUserAction;
 
 #[Group('Users')]
 final readonly class StoreUserController
@@ -19,9 +19,9 @@ final readonly class StoreUserController
         title: 'Create a user',
         description: 'Creates a new user.'
     )]
-    public function __invoke(UpsertUserRequest $request, StoreUserAction $storeUserAction): JsonResponse
+    public function __invoke(UpsertUserRequest $request, UpsertUserAction $upsertUserAction): JsonResponse
     {
-        $user = $storeUserAction->execute($request->toDto());
+        $user = $upsertUserAction->execute($request->toDto());
 
         return UserResource::make($user)
             ->response()
