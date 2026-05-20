@@ -6,6 +6,7 @@ namespace Tests\Feature\Clinics;
 
 use Database\Factories\ClinicFactory;
 use Lightit\Clinics\App\Controllers\DeleteClinicController;
+use Lightit\Clinics\Domain\Models\Clinic;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\deleteJson;
 
@@ -16,7 +17,7 @@ describe('clinics', function (): void {
         $response = deleteJson("api/clinics/$existingClinic->id");
         $response->assertNoContent();
 
-        assertDatabaseMissing('clinics', ['id' => $existingClinic->id]);
+        assertDatabaseMissing(Clinic::class, ['id' => $existingClinic->id]);
     });
 
     it('returns a 404 response when clinic is not found', function (): void {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Clinics;
 
 use Database\Factories\ClinicFactory;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Lightit\Clinics\App\Controllers\GetClinicController;
 use Lightit\Clinics\App\Resources\ClinicResource;
 use function Pest\Laravel\getJson;
@@ -15,17 +14,14 @@ describe('clinics', function (): void {
     it('retrieves a clinic and returns a successful response', function (): void {
         $existingClinic = ClinicFactory::new()->createOne();
 
+        /** @var array{data: array<string, mixed>} $resourceResponse */
+        $resourceResponse = ClinicResource::make($existingClinic)
+            ->response()
+            ->getData(true);
+
         getJson("api/clinics/$existingClinic->id")
             ->assertOk()
-            ->assertJson(
-                fn (AssertableJson $json): AssertableJson =>
-                $json->has(
-                    'data',
-                    fn (AssertableJson $json): AssertableJson => $json->whereAll(
-                        ClinicResource::make($existingClinic)->resolve()
-                    )
-                )
-            );
+            ->assertJsonPath('data', $resourceResponse['data']);
     });
 
     it('returns a 404 response when clinic is not found', function (): void {

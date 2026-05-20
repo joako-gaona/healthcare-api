@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Clinics;
 
 use Illuminate\Support\Str;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Lightit\Clinics\App\Controllers\StoreClinicController;
 use Lightit\Clinics\App\Resources\ClinicResource;
 use Lightit\Clinics\Domain\Models\Clinic;
@@ -39,19 +38,16 @@ describe('clinics', function (): void {
             ->where('name', $data['name'])
             ->firstOrFail();
 
+        /** @var array{data: array<string, mixed>} $resourceResponse */
+        $resourceResponse = ClinicResource::make($clinic)
+            ->response()
+            ->getData(true);
+
         $response
             ->assertCreated()
-            ->assertJson(
-                fn (AssertableJson $json): AssertableJson =>
-                $json->has(
-                    'data',
-                    fn (AssertableJson $json): AssertableJson => $json->whereAll(
-                        ClinicResource::make($clinic)->resolve()
-                    )
-                )
-            );
+            ->assertJsonPath('data', $resourceResponse['data']);
 
-        assertDatabaseHas('clinics', [
+        assertDatabaseHas(Clinic::class, [
             'name' => $data['name'],
             'address' => $data['address'],
         ]);

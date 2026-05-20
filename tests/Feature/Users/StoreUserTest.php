@@ -71,7 +71,7 @@ describe('users', function (): void {
                 )
             );
 
-        assertDatabaseHas('users', [
+        assertDatabaseHas(User::class, [
             'name' => $data['name'],
             'email' => $data['email_address'],
         ]);
@@ -91,7 +91,7 @@ describe('users', function (): void {
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['email_address'], 'error.fields');
 
-        assertDatabaseMissing('users', [
+        assertDatabaseMissing(User::class, [
             'name' => $data['name'],
             'email' => $data['email_address'],
         ]);
