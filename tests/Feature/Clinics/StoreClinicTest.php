@@ -11,7 +11,6 @@ use Lightit\Clinics\App\Resources\ClinicResource;
 use Lightit\Clinics\Domain\Models\Clinic;
 use Tests\RequestFactories\StoreClinicRequestFactory;
 use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\postJson;
 
 function getLongClinicValue(int $length): string
@@ -60,14 +59,13 @@ describe('clinics', function (): void {
 
     it('cannot create a clinic with invalid data', function (string $field, string|array $value): void {
         $data = StoreClinicRequestFactory::new()->create();
+        $clinicsCount = Clinic::query()->count();
 
         $response = postJson(url('/api/clinics'), [...$data, $field => $value]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([$field], 'error.fields');
 
-        assertDatabaseMissing('clinics', [
-            'name' => is_string($value) ? $value : $data['name'],
-        ]);
+        expect(Clinic::query()->count())->toBe($clinicsCount);
     })->with('clinic-validation-rules');
 });
