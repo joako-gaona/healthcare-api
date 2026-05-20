@@ -22,6 +22,6 @@ describe('users', function (): void {
     it('returns a 404 response when user is not found', function (): void {
         $nonExistentUserId = 99999;
 
-        deleteJson("api/users/$nonExistentUserId")->assertNotFound();
+        deleteJson("api/users/{$nonExistentUserId}")->assertNotFound();
     });
 });

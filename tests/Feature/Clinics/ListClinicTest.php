@@ -8,14 +8,16 @@ use Database\Factories\ClinicFactory;
 use Lightit\Clinics\App\Controllers\ListClinicController;
 use function Pest\Laravel\getJson;
 
+const CLINICS_TO_CREATE = 5;
+
 describe('clinics', function (): void {
     /** @see ListClinicController */
     it('can list clinics successfully', function (): void {
         ClinicFactory::new()
-            ->createMany(5);
+            ->createMany(CLINICS_TO_CREATE);
 
         getJson(url('/api/clinics'))
             ->assertSuccessful()
-            ->assertJsonCount(5, 'data');
+            ->assertJsonCount(CLINICS_TO_CREATE, 'data');
     });
 });
