@@ -18,7 +18,7 @@ class ListClinicAction
         return QueryBuilder::for(Clinic::class)
             ->allowedFilters(['name', 'address'])
             ->allowedSorts(['id', 'name', 'address'])
-            ->orderBy('id', 'desc')
+            ->orderByDesc('id')
             ->paginate();
     }
 }
