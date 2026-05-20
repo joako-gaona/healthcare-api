@@ -18,5 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         UserFactory::new()->createMany(35);
+
+        $this->call(ClinicSeeder::class);
     }
 }
