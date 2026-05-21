@@ -36,6 +36,6 @@ class Doctor extends Model
      */
     public function clinics(): BelongsToMany
     {
-        return $this->belongsToMany(Clinic::class, 'clinic_doctor');
+        return $this->belongsToMany(Clinic::class);
     }
 }
