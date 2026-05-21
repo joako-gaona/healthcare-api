@@ -29,6 +29,8 @@ describe('clinics', function (): void {
             ->where('name', $data['name'])
             ->firstOrFail();
 
+        $clinic->loadCount('doctors');
+
         /** @var array{data: array<string, mixed>} $resourceResponse */
         $resourceResponse = ClinicResource::make($clinic)
             ->response()
