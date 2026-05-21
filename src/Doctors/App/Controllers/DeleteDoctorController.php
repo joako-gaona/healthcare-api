@@ -19,7 +19,7 @@ final readonly class DeleteDoctorController
     )]
     public function __invoke(Doctor $doctor): Response
     {
-        $doctor->delete();
+        $doctor->deleteOrFail();
 
         return response()->noContent();
     }

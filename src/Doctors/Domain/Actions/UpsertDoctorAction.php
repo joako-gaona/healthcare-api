@@ -19,6 +19,6 @@ class UpsertDoctorAction
 
         $doctor->clinics()->sync($doctorDto->clinicIds);
 
-        return $doctor->load('clinics');
+        return $doctor;
     }
 }
