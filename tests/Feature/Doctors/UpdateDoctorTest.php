@@ -25,8 +25,12 @@ describe('doctors', function (): void {
             'name' => 'Old doctor',
         ]);
 
-        $doctor->clinics()->sync($oldClinics->pluck('id')->all());
+        /** @var list<int> $oldClinicIds */
+        $oldClinicIds = $oldClinics->pluck('id')->all();
 
+        $doctor->clinics()->sync($oldClinicIds);
+
+        /** @var array{name: string, clinic_ids: list<int>} $data */
         $data = StoreDoctorRequestFactory::new()->create([
             'name' => 'Updated doctor',
         ]);
@@ -60,10 +64,10 @@ describe('doctors', function (): void {
             ]);
         }
 
-        foreach ($oldClinics as $oldClinic) {
+        foreach ($oldClinicIds as $oldClinicId) {
             assertDatabaseMissing('clinic_doctor', [
                 'doctor_id' => $doctor->id,
-                'clinic_id' => $oldClinic->id,
+                'clinic_id' => $oldClinicId,
             ]);
         }
     });

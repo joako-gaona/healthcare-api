@@ -18,7 +18,11 @@ describe('doctors', function (): void {
             ->create();
 
         $existingDoctor = DoctorFactory::new()->createOne();
-        $existingDoctor->clinics()->sync($clinics->pluck('id')->all());
+
+        /** @var list<int> $clinicIds */
+        $clinicIds = $clinics->pluck('id')->all();
+
+        $existingDoctor->clinics()->sync($clinicIds);
         $existingDoctor->load('clinics');
 
         /** @var array{data: array<string, mixed>} $resourceResponse */

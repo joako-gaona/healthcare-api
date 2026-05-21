@@ -18,10 +18,13 @@ describe('doctors', function (): void {
             ->count(2)
             ->create();
 
+        /** @var list<int> $clinicIds */
+        $clinicIds = $clinics->pluck('id')->all();
+
         DoctorFactory::new()
             ->count(DOCTORS_TO_CREATE)
             ->create()
-            ->each(fn ($doctor) => $doctor->clinics()->sync($clinics->pluck('id')->all()));
+            ->each(fn ($doctor) => $doctor->clinics()->sync($clinicIds));
 
         getJson(url('/api/doctors'))
             ->assertSuccessful()

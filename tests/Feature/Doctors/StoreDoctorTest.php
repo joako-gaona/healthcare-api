@@ -31,6 +31,7 @@ dataset(name: 'doctor-validation-rules', dataset: [
 describe('doctors', function (): void {
     /** @see StoreDoctorController */
     it(description: 'can create a doctor successfully', closure: function (): void {
+        /** @var array{name: string, clinic_ids: list<int>} $data */
         $data = StoreDoctorRequestFactory::new()->create();
 
         $response = postJson(url('/api/doctors'), $data);
@@ -62,15 +63,19 @@ describe('doctors', function (): void {
         }
     });
 
-    it('cannot create a doctor with invalid data', function (string $field, string|array $value, string $errorField): void {
-        $data = StoreDoctorRequestFactory::new()->create();
-        $doctorsCount = Doctor::query()->count();
-
-        $response = postJson(url('/api/doctors'), [...$data, $field => $value]);
-
-        $response->assertUnprocessable()
-            ->assertJsonValidationErrors([$errorField], 'error.fields');
-
-        expect(Doctor::query()->count())->toBe($doctorsCount);
-    })->with('doctor-validation-rules');
+    it(
+        'cannot create a doctor with invalid data',
+        function (string $field, string|array $value, string $errorField): void {
+            /** @var array{name: string, clinic_ids: list<int>} $data */
+            $data = StoreDoctorRequestFactory::new()->create();
+            $doctorsCount = Doctor::query()->count();
+    
+            $response = postJson(url('/api/doctors'), [...$data, $field => $value]);
+    
+            $response->assertUnprocessable()
+                ->assertJsonValidationErrors([$errorField], 'error.fields');
+    
+            expect(Doctor::query()->count())->toBe($doctorsCount);
+        }
+    )->with('doctor-validation-rules');
 });

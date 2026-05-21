@@ -10,17 +10,20 @@ use Worksome\RequestFactories\RequestFactory;
 class StoreDoctorRequestFactory extends RequestFactory
 {
     /**
-     * @return array<string, mixed>
+     * @return array{name: string, clinic_ids: list<int>}
      */
     public function definition(): array
     {
+        /** @var list<int> $clinicIds */
+        $clinicIds = ClinicFactory::new()
+            ->count(2)
+            ->create()
+            ->pluck('id')
+            ->all();
+
         return [
             'name' => fake()->name(),
-            'clinic_ids' => ClinicFactory::new()
-                ->count(2)
-                ->create()
-                ->pluck('id')
-                ->all(),
+            'clinic_ids' => $clinicIds,
         ];
     }
 }

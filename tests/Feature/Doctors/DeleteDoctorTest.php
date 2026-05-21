@@ -19,7 +19,11 @@ describe('doctors', function (): void {
             ->create();
 
         $existingDoctor = DoctorFactory::new()->createOne();
-        $existingDoctor->clinics()->sync($clinics->pluck('id')->all());
+
+        /** @var list<int> $clinicIds */
+        $clinicIds = $clinics->pluck('id')->all();
+
+        $existingDoctor->clinics()->sync($clinicIds);
 
         $response = deleteJson("api/doctors/$existingDoctor->id");
 
@@ -27,10 +31,10 @@ describe('doctors', function (): void {
 
         assertDatabaseMissing(Doctor::class, ['id' => $existingDoctor->id]);
 
-        foreach ($clinics as $clinic) {
+        foreach ($clinicIds as $clinicId) {
             assertDatabaseMissing('clinic_doctor', [
                 'doctor_id' => $existingDoctor->id,
-                'clinic_id' => $clinic->id,
+                'clinic_id' => $clinicId,
             ]);
         }
     });
