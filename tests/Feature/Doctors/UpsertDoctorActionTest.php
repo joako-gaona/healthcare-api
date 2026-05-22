@@ -19,7 +19,7 @@ describe('upsert doctor action', function (): void {
     it('rolls back the doctor creation when syncing clinics fails', function (): void {
         $action = new UpsertDoctorAction();
 
-        expect(fn () => $action->execute(new DoctorDto(
+        expect(fn (): Doctor => $action->execute(new DoctorDto(
             name: 'Doctor without valid clinics',
             clinicIds: [NON_EXISTENT_CLINIC_ID],
         )))->toThrow(QueryException::class);
@@ -39,7 +39,7 @@ describe('upsert doctor action', function (): void {
 
         $action = new UpsertDoctorAction();
 
-        expect(fn () => $action->execute(new DoctorDto(
+        expect(fn (): Doctor => $action->execute(new DoctorDto(
             name: 'Updated doctor',
             clinicIds: [NON_EXISTENT_CLINIC_ID],
         ), $doctor))->toThrow(QueryException::class);
