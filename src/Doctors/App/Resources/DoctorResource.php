@@ -24,7 +24,11 @@ class DoctorResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'clinics' => ClinicResource::collection($this->whenLoaded('clinics')),
+            'clinics' => $this->whenLoaded(
+                'clinics',
+                fn ($clinics) => ClinicResource::collection($clinics),
+                null,
+            ),
         ];
     }
 }

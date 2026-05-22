@@ -16,15 +16,18 @@ use Lightit\Clinics\Domain\Models\Clinic;
 class ClinicResource extends JsonResource
 {
     /**
-     * @return array<string, mixed>
+     * @return array<string, int|string|null>
      */
     public function toArray(Request $request): array
     {
+        /** @var int|null $doctorsCount */
+        $doctorsCount = $this->whenCounted('doctors', fn (int $count): int => $count, null);
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'address' => $this->address,
-            'doctors_count' => $this->whenCounted('doctors'),
+            'doctors_count' => $doctorsCount,
         ];
     }
 }
