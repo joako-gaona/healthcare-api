@@ -21,7 +21,7 @@ class UpsertDoctorRequest extends FormRequest
         return [
             self::NAME => ['required', 'string', 'max:120'],
             self::CLINIC_IDS => ['required', 'array', 'min:1'],
-            self::CLINIC_IDS . '.*' => ['integer','distinct','exists:clinics,id'],
+            self::CLINIC_IDS . '.*' => ['integer', 'distinct', 'exists:clinics,id'],
         ];
     }
 
