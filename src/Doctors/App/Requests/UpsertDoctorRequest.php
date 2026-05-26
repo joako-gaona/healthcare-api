@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Lightit\Doctors\App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Lightit\Clinics\Domain\Models\Clinic;
 use Lightit\Doctors\Domain\DataTransferObjects\DoctorDto;
 
 class UpsertDoctorRequest extends FormRequest
@@ -20,8 +22,8 @@ class UpsertDoctorRequest extends FormRequest
     {
         return [
             self::NAME => ['required', 'string', 'max:120'],
-            self::CLINIC_IDS => ['required', 'array', 'min:1'],
-            self::CLINIC_IDS . '.*' => ['integer', 'distinct', 'exists:clinics,id'],
+            self::CLINIC_IDS => ['required', 'array', 'min:1', Rule::exists(Clinic::class, 'id')],
+            self::CLINIC_IDS . '.*' => [Rule::numeric()->integer(), 'distinct'],
         ];
     }
 

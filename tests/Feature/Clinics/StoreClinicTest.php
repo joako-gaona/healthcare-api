@@ -28,8 +28,8 @@ dataset(name: 'clinic-validation-rules', dataset: [
     'address must not be too long' => ['address', getLongClinicValue(256), 'address'],
 
     'doctor_ids must be an array' => ['doctor_ids', 'not-array', 'doctor_ids'],
-    'doctor_ids item must be an integer' => ['doctor_ids', ['not-id'], 'doctor_ids.0'],
-    'doctor_ids item must exist' => ['doctor_ids', [99999], 'doctor_ids.0'],
+    'doctor_ids item must be an integer' => ['doctor_ids', [null], 'doctor_ids.0'],
+    'doctor_ids item must exist' => ['doctor_ids', [99999], 'doctor_ids'],
 ]);
 
 describe('clinics', function (): void {

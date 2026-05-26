@@ -24,8 +24,8 @@ dataset(name: 'doctor-validation-rules', dataset: [
 
     'clinic_ids is required' => ['clinic_ids', [], 'clinic_ids'],
     'clinic_ids must be an array' => ['clinic_ids', 'not-array', 'clinic_ids'],
-    'clinic_ids item must be an integer' => ['clinic_ids', ['not-id'], 'clinic_ids.0'],
-    'clinic_ids item must exist' => ['clinic_ids', [99999], 'clinic_ids.0'],
+    'clinic_ids item must be an integer' => ['clinic_ids', [null], 'clinic_ids.0'],
+    'clinic_ids item must exist' => ['clinic_ids', [99999], 'clinic_ids'],
 ]);
 
 describe('doctors', function (): void {
