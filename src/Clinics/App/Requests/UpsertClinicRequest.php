@@ -6,6 +6,9 @@ namespace Lightit\Clinics\App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Lightit\Clinics\Domain\DataTransferObjects\ClinicDto;
+use Lightit\Doctors\Domain\Models\Doctor;
+use Illuminate\Validation\Rule;
+
 
 class UpsertClinicRequest extends FormRequest
 {
@@ -23,8 +26,8 @@ class UpsertClinicRequest extends FormRequest
         return [
             self::NAME => ['required', 'string', 'max:120'],
             self::ADDRESS => ['required', 'string', 'max:255'],
-            self::DOCTOR_IDS => ['sometimes', 'array'],
-            self::DOCTOR_IDS . '.*' => ['integer', 'distinct', 'exists:doctors,id'],
+            self::DOCTOR_IDS => ['sometimes', 'array', Rule::exists(Doctor::class, 'id')],
+            self::DOCTOR_IDS . '.*' => [Rule::numeric()->integer(), 'distinct'],
         ];
     }
 
@@ -32,7 +35,7 @@ class UpsertClinicRequest extends FormRequest
     {
         /** @var list<int>|null $doctorIds */
         $doctorIds = $this->has(self::DOCTOR_IDS)
-            ? $this->input(self::DOCTOR_IDS, [])
+            ? $this->array(self::DOCTOR_IDS)
             : null;
 
         return new ClinicDto(
