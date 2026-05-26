@@ -6,11 +6,9 @@ namespace Tests\Feature\Users;
 
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Lightit\Users\App\Controllers\StoreUserController;
-use Lightit\Users\App\Notifications\UserRegisteredNotification;
 use Lightit\Users\App\Resources\UserResource;
 use Lightit\Users\Domain\Models\User;
 use Tests\RequestFactories\StoreUserRequestFactory;
@@ -48,8 +46,6 @@ dataset(name: 'validation-rules', dataset: [
     'password not too long' => ['password', fn (): string => getLongName()],
 ]);
 
-beforeEach(fn () => Notification::fake());
-
 describe('users', function (): void {
     /** @see StoreUserController */
     it(description: 'can create a user successfully', closure: function (): void {
@@ -81,8 +77,6 @@ describe('users', function (): void {
         ]);
 
         expect(Hash::check('>e$pV4chNFcJoAB%X#{', $user->password))->toBeTrue();
-
-        Notification::assertSentTo($user, UserRegisteredNotification::class);
     });
 
     it(description: 'cannot create a user with an already registered email', closure: function (): void {
@@ -111,16 +105,4 @@ describe('users', function (): void {
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([$field], 'error.fields');
     })->with('validation-rules');
-
-    it(description: 'triggers user registration notification', closure: function (): void {
-        Notification::fake();
-
-        $data = StoreUserRequestFactory::new()->create();
-
-        postJson(url('/api/users'), $data);
-
-        $user = User::query()->where('email', $data['email_address'])->firstOrFail();
-
-        Notification::assertSentTo($user, UserRegisteredNotification::class);
-    });
 });

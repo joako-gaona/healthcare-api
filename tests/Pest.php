@@ -27,6 +27,13 @@ uses(
     Str::createRandomStringsNormally();
     Str::createUuidsNormally();
     Http::preventStrayRequests();
+    Http::fake([
+        'api.pwnedpasswords.com/range/5BAA6' => Http::response(
+            "1E4C9B93F3F0682250B6CF8331B7EE68FD8:100\n",
+            200,
+        ),
+        'api.pwnedpasswords.com/range/*' => Http::response('', 200),
+    ]);
     Process::preventStrayProcesses();
     Sleep::fake();
     MockConfig::throwOnMissingFixtures();
