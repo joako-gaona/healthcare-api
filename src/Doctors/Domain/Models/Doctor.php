@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Lightit\Clinics\Domain\Models\Clinic;
 
 /**
- * @property int                          $id
- * @property string                       $name
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property int                     $id
+ * @property string                  $name
+ * @property \Carbon\CarbonImmutable $created_at
+ * @property \Carbon\CarbonImmutable $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Clinic> $clinics
  * @property-read int|null $clinics_count
  *

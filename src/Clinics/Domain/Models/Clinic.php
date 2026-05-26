@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Lightit\Doctors\Domain\Models\Doctor;
 
 /**
- * @property int                          $id
- * @property string                       $name
- * @property string                       $address
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property int                     $id
+ * @property string                  $name
+ * @property string                  $address
+ * @property \Carbon\CarbonImmutable $created_at
+ * @property \Carbon\CarbonImmutable $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Doctor> $doctors
  * @property-read int|null $doctors_count
  *
