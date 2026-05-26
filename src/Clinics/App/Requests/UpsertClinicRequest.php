@@ -13,6 +13,8 @@ class UpsertClinicRequest extends FormRequest
 
     public const string ADDRESS = 'address';
 
+    public const string DOCTOR_IDS = 'doctor_ids';
+
     /**
      * @return array<string, mixed>
      */
@@ -21,14 +23,22 @@ class UpsertClinicRequest extends FormRequest
         return [
             self::NAME => ['required', 'string', 'max:120'],
             self::ADDRESS => ['required', 'string', 'max:255'],
+            self::DOCTOR_IDS => ['sometimes', 'array'],
+            self::DOCTOR_IDS . '.*' => ['integer', 'distinct', 'exists:doctors,id'],
         ];
     }
 
     public function toDto(): ClinicDto
     {
+        /** @var list<int>|null $doctorIds */
+        $doctorIds = $this->has(self::DOCTOR_IDS)
+            ? $this->input(self::DOCTOR_IDS, [])
+            : null;
+
         return new ClinicDto(
             name: $this->string(self::NAME)->toString(),
             address: $this->string(self::ADDRESS)->toString(),
+            doctorIds: $doctorIds,
         );
     }
 }
