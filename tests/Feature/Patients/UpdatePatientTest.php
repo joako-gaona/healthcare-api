@@ -7,6 +7,7 @@ namespace Tests\Feature\Patients;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use Lightit\Patients\App\Controllers\UpdatePatientController;
+use Lightit\Patients\App\Requests\UpsertPatientRequest;
 use Lightit\Patients\App\Resources\PatientResource;
 use Lightit\Users\Domain\Models\User;
 use Tests\RequestFactories\StorePatientRequestFactory;
@@ -21,16 +22,12 @@ describe('patients', function (): void {
         ]);
 
         $data = StorePatientRequestFactory::new()->create([
-            'name' => 'Updated patient',
-            'password' => '>e$pV4chNFcJoAB%X#{',
-            'password_confirmation' => '>e$pV4chNFcJoAB%X#{',
+            UpsertPatientRequest::NAME => 'Updated patient',
         ]);
 
         $response = putJson(url("/api/patients/$patient->id"), $data);
 
-        $patient = User::query()
-            ->where('name', $data['name'])
-            ->firstOrFail();
+        $patient->refresh();
 
         /** @var array{data: array<string, mixed>} $resourceResponse */
         $resourceResponse = PatientResource::make($patient)
@@ -43,11 +40,11 @@ describe('patients', function (): void {
 
         assertDatabaseHas(User::class, [
             'id' => $patient->id,
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name' => $data[UpsertPatientRequest::NAME],
+            'email' => $data[UpsertPatientRequest::EMAIL],
         ]);
 
-        expect(Hash::check('>e$pV4chNFcJoAB%X#{', $patient->password))->toBeTrue();
+        expect(Hash::check(StorePatientRequestFactory::VALID_PASSWORD, $patient->password))->toBeTrue();
     });
 
     it('can update a patient without changing its email', function (): void {
@@ -56,8 +53,8 @@ describe('patients', function (): void {
         ]);
 
         $data = StorePatientRequestFactory::new()->create([
-            'name' => 'Updated patient',
-            'email' => $patient->email,
+            UpsertPatientRequest::NAME => 'Updated patient',
+            UpsertPatientRequest::EMAIL => $patient->email,
         ]);
 
         $response = putJson(url("/api/patients/$patient->id"), $data);
@@ -67,7 +64,7 @@ describe('patients', function (): void {
 
         assertDatabaseHas(User::class, [
             'id' => $patient->id,
-            'name' => $data['name'],
+            'name' => $data[UpsertPatientRequest::NAME],
             'email' => $patient->email,
         ]);
     });
@@ -76,14 +73,18 @@ describe('patients', function (): void {
         $existingPatient = UserFactory::new()->createOne();
 
         $data = [
-            'name' => '',
-            'email' => 'not-an-email',
-            'password' => 'short',
+            UpsertPatientRequest::NAME => '',
+            UpsertPatientRequest::EMAIL => 'not-an-email',
+            UpsertPatientRequest::PASSWORD => 'short',
         ];
 
         $response = putJson(url("/api/patients/$existingPatient->id"), $data);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name', 'email', 'password'], 'error.fields');
+            ->assertJsonValidationErrors([
+                UpsertPatientRequest::NAME,
+                UpsertPatientRequest::EMAIL,
+                UpsertPatientRequest::PASSWORD,
+            ], 'error.fields');
     });
 });

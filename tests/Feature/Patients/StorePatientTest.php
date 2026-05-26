@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Lightit\Patients\App\Controllers\StorePatientController;
+use Lightit\Patients\App\Requests\UpsertPatientRequest;
 use Lightit\Patients\App\Resources\PatientResource;
 use Lightit\Users\Domain\Models\User;
 use Tests\RequestFactories\StorePatientRequestFactory;
@@ -21,31 +22,36 @@ function getLongPatientValue(int $length): string
 }
 
 dataset(name: 'patient-validation-rules', dataset: [
-    'name is required' => ['name', '', 'name'],
-    'name must be a string' => ['name', ['array'], 'name'],
-    'name must not be too short' => ['name', 'abc', 'name'],
-    'name must not be too long' => ['name', getLongPatientValue(81), 'name'],
+    'name is required' => [UpsertPatientRequest::NAME, '', UpsertPatientRequest::NAME],
+    'name must be a string' => [UpsertPatientRequest::NAME, ['array'], UpsertPatientRequest::NAME],
+    'name must not be too short' => [UpsertPatientRequest::NAME, 'abc', UpsertPatientRequest::NAME],
+    'name must not be too long' => [UpsertPatientRequest::NAME, getLongPatientValue(81), UpsertPatientRequest::NAME],
 
-    'email is required' => ['email', '', 'email'],
-    'email must be valid' => ['email', 'invalid-email', 'email'],
-    'email must not be too long' => ['email', getLongPatientValue(101) . '@example.com', 'email'],
+    'email is required' => [UpsertPatientRequest::EMAIL, '', UpsertPatientRequest::EMAIL],
+    'email must be valid' => [UpsertPatientRequest::EMAIL, 'invalid-email', UpsertPatientRequest::EMAIL],
+    'email must not be too long' => [
+        UpsertPatientRequest::EMAIL,
+        getLongPatientValue(101) . '@example.com',
+        UpsertPatientRequest::EMAIL,
+    ],
 
-    'password is required' => ['password', '', 'password'],
-    'password must be confirmed' => ['password_confirmation', 'different-password', 'password'],
+    'password is required' => [UpsertPatientRequest::PASSWORD, '', UpsertPatientRequest::PASSWORD],
+    'password must be confirmed' => [
+        UpsertPatientRequest::PASSWORD . '_confirmation',
+        'different-password',
+        UpsertPatientRequest::PASSWORD,
+    ],
 ]);
 
 describe('patients', function (): void {
     /** @see StorePatientController */
     it(description: 'can create a patient successfully', closure: function (): void {
-        $data = StorePatientRequestFactory::new()->create([
-            'password' => '>e$pV4chNFcJoAB%X#{',
-            'password_confirmation' => '>e$pV4chNFcJoAB%X#{',
-        ]);
+        $data = StorePatientRequestFactory::new()->create();
 
         $response = postJson(url('/api/patients'), $data);
 
         $patient = User::query()
-            ->where('email', $data['email'])
+            ->where('email', $data[UpsertPatientRequest::EMAIL])
             ->firstOrFail();
 
         /** @var array{data: array<string, mixed>} $resourceResponse */
@@ -58,28 +64,28 @@ describe('patients', function (): void {
             ->assertJsonPath('data', $resourceResponse['data']);
 
         assertDatabaseHas(User::class, [
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name' => $data[UpsertPatientRequest::NAME],
+            'email' => $data[UpsertPatientRequest::EMAIL],
         ]);
 
-        expect(Hash::check('>e$pV4chNFcJoAB%X#{', $patient->password))->toBeTrue();
+        expect(Hash::check(StorePatientRequestFactory::VALID_PASSWORD, $patient->password))->toBeTrue();
     });
 
     it(description: 'cannot create a patient with an already registered email', closure: function (): void {
         $existingPatient = UserFactory::new()->createOne();
 
         $data = StorePatientRequestFactory::new()->create([
-            'email' => $existingPatient->email,
+            UpsertPatientRequest::EMAIL => $existingPatient->email,
         ]);
 
         $response = postJson(url('/api/patients'), $data);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['email'], 'error.fields');
+            ->assertJsonValidationErrors([UpsertPatientRequest::EMAIL], 'error.fields');
 
         assertDatabaseMissing(User::class, [
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name' => $data[UpsertPatientRequest::NAME],
+            'email' => $data[UpsertPatientRequest::EMAIL],
         ]);
     });
 
