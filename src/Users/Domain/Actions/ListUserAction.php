@@ -18,7 +18,7 @@ class ListUserAction
         return QueryBuilder::for(User::class)
             ->allowedFilters(['email'])
             ->allowedSorts('email')
-            ->orderBy('id', 'desc')
+            ->orderByDesc('id')
             ->paginate();
     }
 }

@@ -7,11 +7,11 @@ namespace Lightit\Users\Domain\Actions;
 use Lightit\Users\Domain\DataTransferObjects\UserDto;
 use Lightit\Users\Domain\Models\User;
 
-class StoreUserAction
+class UpsertUserAction
 {
-    public function execute(UserDto $userDto): User
+    public function execute(UserDto $userDto, User|null $user = null): User
     {
-        $user = new User();
+        $user ??= new User();
 
         $user->name = $userDto->name;
         $user->email = $userDto->emailAddress;

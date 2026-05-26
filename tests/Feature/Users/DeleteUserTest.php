@@ -6,6 +6,7 @@ namespace Tests\Feature\Users;
 
 use Database\Factories\UserFactory;
 use Lightit\Users\App\Controllers\DeleteUserController;
+use Lightit\Users\Domain\Models\User;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\deleteJson;
 
@@ -16,12 +17,12 @@ describe('users', function (): void {
         $response = deleteJson("api/users/$existingUser->id");
         $response->assertNoContent();
 
-        assertDatabaseMissing('users', ['id' => $existingUser->id]);
+        assertDatabaseMissing(User::class, ['id' => $existingUser->id]);
     });
 
     it('returns a 404 response when user is not found', function (): void {
         $nonExistentUserId = 99999;
 
-        deleteJson("api/users/$nonExistentUserId")->assertNotFound();
+        deleteJson("api/users/{$nonExistentUserId}")->assertNotFound();
     });
 });

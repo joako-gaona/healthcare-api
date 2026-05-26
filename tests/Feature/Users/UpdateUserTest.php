@@ -46,7 +46,7 @@ describe('users', function (): void {
                 )
             );
 
-        assertDatabaseHas('users', [
+        assertDatabaseHas(User::class, [
             'name' => $data['name'],
             'email' => $data['email_address'],
         ]);
