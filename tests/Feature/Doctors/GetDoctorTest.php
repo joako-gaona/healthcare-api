@@ -32,7 +32,8 @@ describe('doctors', function (): void {
 
         getJson("api/doctors/$existingDoctor->id")
             ->assertOk()
-            ->assertJsonPath('data', $resourceResponse['data']);
+            ->assertJsonPath('data', $resourceResponse['data'])
+            ->assertJsonMissingPath('data.clinics.0.doctors_count');
     });
 
     it('returns a 404 response when doctor is not found', function (): void {
