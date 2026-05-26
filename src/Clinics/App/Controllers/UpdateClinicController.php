@@ -27,8 +27,6 @@ final readonly class UpdateClinicController
     ): JsonResponse {
         $clinic = $upsertClinicAction->execute($request->toDto(), $clinic);
 
-        $clinic->loadCount('doctors');
-
         return ClinicResource::make($clinic)
             ->response();
     }

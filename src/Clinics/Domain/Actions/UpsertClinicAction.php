@@ -24,7 +24,7 @@ class UpsertClinicAction
                 $clinic->doctors()->sync($clinicDto->doctorIds);
             }
 
-            return $clinic;
+            return $clinic->loadCount('doctors');
         });
     }
 }

@@ -23,8 +23,6 @@ final readonly class StoreClinicController
     {
         $clinic = $upsertClinicAction->execute($request->toDto());
 
-        $clinic->loadCount('doctors');
-
         return ClinicResource::make($clinic)
             ->response()
             ->setStatusCode(JsonResponse::HTTP_CREATED);

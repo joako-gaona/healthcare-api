@@ -23,8 +23,6 @@ final readonly class StoreDoctorController
     {
         $doctor = $upsertDoctorAction->execute($request->toDto());
 
-        $doctor->load('clinics');
-
         return DoctorResource::make($doctor)
             ->response()
             ->setStatusCode(JsonResponse::HTTP_CREATED);
