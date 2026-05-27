@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Lightit\Patients\App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Email;
 use Illuminate\Validation\Rules\Password;
 use Lightit\Patients\Domain\DataTransferObjects\PatientDto;
 use Lightit\Users\Domain\Models\User;
-use Illuminate\Support\Str;
 
 class UpsertPatientRequest extends FormRequest
 {
@@ -25,7 +25,8 @@ class UpsertPatientRequest extends FormRequest
      */
     public function rules(): array
     {
-      $uniqueEmailRule = Rule::unique(User::class, 'email')->ignore($this->route('patient'));
+        $uniqueEmailRule = Rule::unique(User::class, 'email')
+        ->ignore($this->route('patient'));
 
         return [
             self::NAME => ['required', 'string', 'min:4', 'max:80'],
