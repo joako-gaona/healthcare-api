@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Clinics\App\Resources;
+namespace Lightit\Doctors\App\Resources;
 
 use Dedoc\Scramble\Attributes\SchemaName;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Lightit\Clinics\Domain\Models\Clinic;
+use Lightit\Clinics\App\Resources\ClinicResource;
+use Lightit\Doctors\Domain\Models\Doctor;
 
 /**
- * @mixin Clinic
+ * @mixin Doctor
  */
-#[SchemaName('Clinic')]
-class ClinicResource extends JsonResource
+#[SchemaName('Doctor')]
+class DoctorResource extends JsonResource
 {
     /**
      * @return array<string, mixed>
@@ -23,8 +24,7 @@ class ClinicResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'address' => $this->address,
-            'doctors_count' => $this->whenCounted('doctors'),
+            'clinics' => ClinicResource::collection($this->whenLoaded('clinics')),
         ];
     }
 }

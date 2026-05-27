@@ -19,7 +19,7 @@ final readonly class DeleteClinicController
     )]
     public function __invoke(Clinic $clinic): Response
     {
-        $clinic->delete();
+        $clinic->deleteOrFail();
 
         return response()->noContent();
     }

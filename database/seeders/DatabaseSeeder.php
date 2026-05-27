@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         UserFactory::new()->createMany(35);
 
         $this->call(ClinicSeeder::class);
+        $this->call(DoctorSeeder::class);
     }
 }

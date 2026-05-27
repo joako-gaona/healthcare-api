@@ -10,18 +10,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('blind_indexes', function (Blueprint $table) {
-            $table->morphs('indexable');
+        Schema::create('doctors', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
-            $table->string('value');
-
-            $table->index(['name', 'value']);
-            $table->unique(['indexable_type', 'indexable_id', 'name']);
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('blind_indexes');
+        Schema::dropIfExists('doctors');
     }
 };

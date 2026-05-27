@@ -14,6 +14,8 @@ describe('clinics', function (): void {
     it('retrieves a clinic and returns a successful response', function (): void {
         $existingClinic = ClinicFactory::new()->createOne();
 
+        $existingClinic->loadCount('doctors');
+
         /** @var array{data: array<string, mixed>} $resourceResponse */
         $resourceResponse = ClinicResource::make($existingClinic)
             ->response()

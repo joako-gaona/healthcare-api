@@ -19,7 +19,7 @@ final readonly class DeleteUserController
     )]
     public function __invoke(User $user): Response
     {
-        $user->delete();
+        $user->deleteOrFail();
 
         return response()->noContent();
     }
