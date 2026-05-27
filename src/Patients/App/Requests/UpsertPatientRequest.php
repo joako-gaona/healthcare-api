@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\Email;
 use Illuminate\Validation\Rules\Password;
 use Lightit\Patients\Domain\DataTransferObjects\PatientDto;
 use Lightit\Users\Domain\Models\User;
+use Illuminate\Support\Str;
 
 class UpsertPatientRequest extends FormRequest
 {
@@ -24,12 +25,7 @@ class UpsertPatientRequest extends FormRequest
      */
     public function rules(): array
     {
-        $uniqueEmailRule = Rule::unique(User::class, 'email');
-        $patient = $this->route('patient');
-
-        if ($patient instanceof User) {
-            $uniqueEmailRule->ignore($patient->id);
-        }
+      $uniqueEmailRule = Rule::unique(User::class, 'email')->ignore($this->route('patient'));
 
         return [
             self::NAME => ['required', 'string', 'min:4', 'max:80'],
@@ -53,7 +49,7 @@ class UpsertPatientRequest extends FormRequest
 
         if (is_string($email)) {
             $this->merge([
-                self::EMAIL => strtolower($email),
+                self::EMAIL => Str::lower($email),
             ]);
         }
     }
