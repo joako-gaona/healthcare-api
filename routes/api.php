@@ -17,11 +17,11 @@ use Lightit\Doctors\App\Controllers\GetDoctorController;
 use Lightit\Doctors\App\Controllers\ListDoctorController;
 use Lightit\Doctors\App\Controllers\StoreDoctorController;
 use Lightit\Doctors\App\Controllers\UpdateDoctorController;
-use Lightit\Users\App\Controllers\DeleteUserController;
-use Lightit\Users\App\Controllers\GetUserController;
-use Lightit\Users\App\Controllers\ListUserController;
-use Lightit\Users\App\Controllers\StoreUserController;
-use Lightit\Users\App\Controllers\UpdateUserController;
+use Lightit\Patients\App\Controllers\DeletePatientController;
+use Lightit\Patients\App\Controllers\GetPatientController;
+use Lightit\Patients\App\Controllers\ListPatientController;
+use Lightit\Patients\App\Controllers\StorePatientController;
+use Lightit\Patients\App\Controllers\UpdatePatientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,18 +51,18 @@ Route::prefix('auth')->group(static function (): void {
 
 /*
 |--------------------------------------------------------------------------
-| Users Routes
+| Patients Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('users')
+Route::prefix('patients')
     ->group(static function (): void {
-        Route::get('/', ListUserController::class);
-        Route::post('/', StoreUserController::class);
-        Route::prefix('{user}')->group(static function (): void {
-            Route::get('/', GetUserController::class)->withTrashed();
-            Route::put('/', UpdateUserController::class);
-            Route::delete('/', DeleteUserController::class);
-        })->whereNumber('user');
+        Route::get('/', ListPatientController::class);
+        Route::post('/', StorePatientController::class);
+        Route::prefix('{patient}')->group(static function (): void {
+            Route::get('/', GetPatientController::class);
+            Route::put('/', UpdatePatientController::class);
+            Route::delete('/', DeletePatientController::class);
+        })->whereNumber('patient');
     });
 
 /*

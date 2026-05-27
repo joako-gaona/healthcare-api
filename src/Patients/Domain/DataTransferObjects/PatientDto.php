@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Users\Domain\DataTransferObjects;
+namespace Lightit\Patients\Domain\DataTransferObjects;
 
 use SensitiveParameter;
 
-readonly class UserDto
+readonly class PatientDto
 {
     public function __construct(
         public string $name,
-        public string $emailAddress,
+        public string $email,
         #[SensitiveParameter]
         public string $password,
     ) {
