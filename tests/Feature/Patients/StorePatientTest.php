@@ -89,6 +89,27 @@ describe('patients', function (): void {
         ]);
     });
 
+    it(description: 'cannot create a patient with a differently-cased registered email', closure: function (): void {
+        UserFactory::new()->createOne([
+            'email' => 'patient@example.com',
+        ]);
+
+        $data = StorePatientRequestFactory::new()->create([
+            UpsertPatientRequest::NAME => 'Mixed case duplicate',
+            UpsertPatientRequest::EMAIL => 'Patient@Example.com',
+        ]);
+
+        $response = postJson(url('/api/patients'), $data);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors([UpsertPatientRequest::EMAIL], 'error.fields');
+
+        assertDatabaseMissing(User::class, [
+            'name' => $data[UpsertPatientRequest::NAME],
+            'email' => 'patient@example.com',
+        ]);
+    });
+
     it(
         'cannot create a patient with invalid data',
         function (string $field, string|array $value, string $errorField): void {

@@ -22,11 +22,6 @@ use Lightit\Patients\App\Controllers\GetPatientController;
 use Lightit\Patients\App\Controllers\ListPatientController;
 use Lightit\Patients\App\Controllers\StorePatientController;
 use Lightit\Patients\App\Controllers\UpdatePatientController;
-use Lightit\Users\App\Controllers\DeleteUserController;
-use Lightit\Users\App\Controllers\GetUserController;
-use Lightit\Users\App\Controllers\ListUserController;
-use Lightit\Users\App\Controllers\StoreUserController;
-use Lightit\Users\App\Controllers\UpdateUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,22 +48,6 @@ Route::prefix('auth')->group(static function (): void {
         ]));
     });
 });
-
-/*
-|--------------------------------------------------------------------------
-| Users Routes
-|--------------------------------------------------------------------------
-*/
-Route::prefix('users')
-    ->group(static function (): void {
-        Route::get('/', ListUserController::class);
-        Route::post('/', StoreUserController::class);
-        Route::prefix('{user}')->group(static function (): void {
-            Route::get('/', GetUserController::class)->withTrashed();
-            Route::put('/', UpdateUserController::class);
-            Route::delete('/', DeleteUserController::class);
-        })->whereNumber('user');
-    });
 
 /*
 |--------------------------------------------------------------------------

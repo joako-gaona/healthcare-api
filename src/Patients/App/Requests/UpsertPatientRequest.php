@@ -47,6 +47,17 @@ class UpsertPatientRequest extends FormRequest
         ];
     }
 
+    protected function prepareForValidation(): void
+    {
+        $email = $this->input(self::EMAIL);
+
+        if (is_string($email)) {
+            $this->merge([
+                self::EMAIL => strtolower($email),
+            ]);
+        }
+    }
+
     public function toDto(): PatientDto
     {
         return new PatientDto(
